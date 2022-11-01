@@ -30,9 +30,9 @@ parser.add_argument('--trainlist', default='./filenames/SceneFlow_cleanpass_trai
 parser.add_argument('--vallist', default='./filenames/SceneFlow_cleanpass_val.txt', help='validating list')
 parser.add_argument('--epochs', type=int, default=50, help='number of epochs to train')
 parser.add_argument('--groups', type=int, default=48, help='number of groups of Cost Aggregation')
-parser.add_argument('--logtxt', default='./save/sceneflow C=64/log.txt', help='train data')
+parser.add_argument('--logtxt', default=None, help='train data')
 parser.add_argument('--loadmodel', default=None, help='load model')
-parser.add_argument('--savemodel', default='./save/sceneflow C=64/', help='save model')
+parser.add_argument('--savemodel', default=None, help='save model')
 parser.add_argument('--no-cuda', action='store_true', default=False, help='enables CUDA training')
 parser.add_argument('--seed', type=int, default=1, metavar='S', help='random seed (default: 1)')
 
@@ -102,7 +102,7 @@ def train(imgL, imgR, disp_L):
     optimizer.zero_grad()
     pred = model(imgL, imgR)
     output = torch.unsqueeze(pred, 1)
-    loss = F.smooth_l1_loss(output[mask], disp_true[mask], reduction='mean')  ###因为warning改过 size_average=True?
+    loss = F.smooth_l1_loss(output[mask], disp_true[mask], reduction='mean')
     loss.backward()
     optimizer.step()
     #torch.cuda.empty_cache()
